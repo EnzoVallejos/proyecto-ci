@@ -19,6 +19,6 @@ jobs:
       with:
         channel: '#todo-feedback-ci'
         status: ${{job.status}}
-        steps: ${{toJson{steps}}}
+        steps: ${{toJson(steps)}}
       if: always()
       
