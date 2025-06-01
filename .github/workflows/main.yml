@@ -12,4 +12,4 @@ jobs:
     - name: probando
       run: pip install -r requirements.txt
     - name: probando2
-      run: manage.py
+      run: python manage.py
