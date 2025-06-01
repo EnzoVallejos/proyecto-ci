@@ -15,7 +15,7 @@ jobs:
       run: pip install -r requirements.txt
     - name: ejecutando pruebas
       run: python manage.py test
-    - uses: actions/slack@v2
+    - uses: act10ns/slack@v2
       with:
         channel: '#todo-feedback-ci'
         status: ${{job.status}}
