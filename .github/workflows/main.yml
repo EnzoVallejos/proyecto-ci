@@ -10,6 +10,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: probando
-      run: pip install -r requeriments.txt
+      run: pip install -r requirements.txt
     - name: probando2
       run: manage.py
