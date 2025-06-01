@@ -9,7 +9,7 @@ jobs:
     
     steps:
     - uses: actions/checkout@v4
-    - name: probando
+    - name: instalando dependencias
       run: pip install -r requirements.txt
-    - name: probando2
-      run: python manage.py
+    - name: ejecutando pruebas
+      run: python manage.py test
