@@ -1,10 +1,13 @@
 name: CI
 on: 
-  push: ["main"]
+  push: 
+    branches: ["main"]
+  
 jobs:
   build:
     runs-on: ubuntu-latest
-  steps:
-  - uses: actions/checkout@v4
-  - name: probando
-    run: ls -la
+    
+    steps:
+    - uses: actions/checkout@v4
+    - name: probando
+      run: ls -la
