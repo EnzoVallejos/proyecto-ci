@@ -9,7 +9,7 @@ class CalculadoraViewTest(TestCase):
             'num2': '4',
             'operacion': 'sumar'
             })
-        self.assertEqual(response.context['resultado'], 1)
+        self.assertEqual(response.context['resultado'], 9)
 
     def test_resta(self):
         response = self.client.post(reverse('calculadora'), {''
