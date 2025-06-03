@@ -1,54 +1,57 @@
 name: CI
-on: 
-  push: 
+
+on:
+  push:
+    branches:
+      - main
   pull_request:
     branches:
       - main
-  
-jobs:
-  push:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    env: 
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-    
-    steps:
-    - uses: actions/checkout@v4
-    - name: instalando dependencias
-      run: pip install -r requirements.txt
-    - name: ejecutando pruebas
-      run: python manage.py test
-    - name: deploy
-      run: curl -X POST ${{ secrets.RENDER_DEPLOY_KEY }}
-    - uses: act10ns/slack@v2
-      with:
-        channel: '#todo-feedback-ci'
-        status: ${{job.status}}
-        steps: ${{toJson(steps)}}
-        menssage: "Cuerpo del PR: ${{ github.event.pull_request.body }}"
-      if: always()
-    
-  test_otra_rama:
-    if: github.event_name == 'push' && github.ref != 'refs/heads/main'
-    runs-on: ubuntu-latest
-    
-    steps:
-    - uses: actions/checkout@v4
-    - name: instalando dependencias
-      run: pip install -r requirements.txt
-    - name: ejecutando pruebas
-      run: python manage.py test
-  
-  test_pr:
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    
-    steps:
-    - uses: actions/checkout@v4
-    - name: instalando dependencias
-      run: pip install -r requirements.txt
-    - name: ejecutando pruebas
-      run: python manage.py test
-  
+  workflow_dispatch:  # por si quieres correrlo manualmente
 
-      
+jobs:
+  push-main:
+    name: Push a main
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Instalando dependencias
+        run: pip install -r requirements.txt
+      - name: Ejecutando pruebas
+        run: python manage.py test
+      - name: Deploy
+        run: curl -X POST ${{ secrets.RENDER_DEPLOY_KEY }}
+      - uses: act10ns/slack@v2
+        with:
+          channel: '#todo-feedback-ci'
+          status: ${{ job.status }}
+          steps: ${{ toJson(steps) }}
+        if: always()
+
+  push-other-branches:
+    name: Push a ramas distintas de main
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref != 'refs/heads/main'
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Instalando dependencias
+        run: pip install -r requirements.txt
+      - name: Ejecutando pruebas
+        run: python manage.py test
+
+  test-pr:
+    name: Tests en Pull Request hacia main
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Instalando dependencias
+        run: pip install -r requirements.txt
+      - name: Ejecutando pruebas
+        run: python manage.py test
