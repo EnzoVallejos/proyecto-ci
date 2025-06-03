@@ -16,7 +16,7 @@ jobs:
     - name: ejecutando pruebas
       run: python manage.py test
     - name: deploy
-      run: curl -X POST "https://api.render.com/deploy/srv-d0vh3qh5pdvs738h668g?key=bDoS68SgEpM"
+      run: curl -X POST ${{ secrets.RENDER_DEPLOY_KEY }}
     - uses: act10ns/slack@v2
       with:
         channel: '#todo-feedback-ci'
