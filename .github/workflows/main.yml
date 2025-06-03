@@ -9,7 +9,7 @@ on:
   
 jobs:
   push:
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     env: 
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -29,6 +29,17 @@ jobs:
         steps: ${{toJson(steps)}}
         menssage: "Cuerpo del PR: ${{ github.event.pull_request.body }}"
       if: always()
+    
+  test_otra_rama:
+    if: github.event_name == 'push' && github.ref != 'refs/heads/main'
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    - name: instalando dependencias
+      run: pip install -r requirements.txt
+    - name: ejecutando pruebas
+      run: python manage.py test
   
   test_pr:
     if: github.event_name == 'pull_request'
