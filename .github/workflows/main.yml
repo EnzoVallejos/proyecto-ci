@@ -19,25 +19,15 @@ jobs:
     - name: ejecutando pruebas
       run: python manage.py test
     - name: deploy
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       run: curl -X POST ${{ secrets.RENDER_DEPLOY_KEY }}
-    - uses: act10ns/slack@v2
+    - name: notificar a slack
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      uses: act10ns/slack@v2
       with:
         channel: '#todo-feedback-ci'
-        status: ${{job.status}}
-        steps: ${{toJson(steps)}}
-        menssage: "Cuerpo del PR: ${{ github.event.pull_request.body }}"
-      if: always()
-    
-  test_otra_rama:
-    if: github.event_name == 'push' && github.ref != 'refs/heads/main'
-    runs-on: ubuntu-latest
-    
-    steps:
-    - uses: actions/checkout@v4
-    - name: instalando dependencias
-      run: pip install -r requirements.txt
-    - name: ejecutando pruebas
-      run: python manage.py test
+        status: ${{ job.status }}
+        steps: ${{ toJson(steps) }}
   
   test_pr:
     if: github.event_name == 'pull_request'
@@ -49,6 +39,3 @@ jobs:
       run: pip install -r requirements.txt
     - name: ejecutando pruebas
       run: python manage.py test
-  
-
-      
