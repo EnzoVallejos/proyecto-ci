@@ -30,10 +30,8 @@ jobs:
       if: always()
   
   test_pr:
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' && github.event.action != 'closed'
     runs-on: ubuntu-latest
-    env: 
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     
     steps:
     - uses: actions/checkout@v4
@@ -41,4 +39,18 @@ jobs:
       run: pip install -r requirements.txt
     - name: ejecutando pruebas
       run: python manage.py test
+  
+  pr_close:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    env: 
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    steps:
+        - uses: act10ns/slack@v2
+          with:
+            channel: '#todo-feedback-ci'
+            status: ${{job.status}}
+            steps: ${{toJson(steps)}}
+            menssage: "Cuerpo del PR: ${{ github.event.pull_request.body }}"
+          if: always()
       
