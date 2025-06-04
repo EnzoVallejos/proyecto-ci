@@ -2,8 +2,6 @@ name: CI
 on: 
   push: 
   pull_request:
-    branches:
-      - main
   
 jobs:
   push:
@@ -27,14 +25,3 @@ jobs:
         channel: '#todo-feedback-ci'
         status: ${{ job.status }}
         steps: ${{ toJson(steps) }}
-  
-  test_pr:
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    
-    steps:
-    - uses: actions/checkout@v4
-    - name: instalando dependencias
-      run: pip install -r requirements.txt
-    - name: ejecutando pruebas
-      run: python manage.py test
