@@ -9,12 +9,12 @@ def calculadora(request):
     operacion = request.POST.get('operacion')
 
     if operacion == 'sumar':
-        resultado = num1 - num2
+        resultado = num1 + num2
         
     elif operacion == 'resta':
         resultado = num1 - num2
 
     else:
-        resultado = "operacion invalidaaaa"
+        resultado = "operacion invalida"
 
     return render(request, 'base.html', {"resultado": resultado})
