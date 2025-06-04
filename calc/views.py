@@ -15,6 +15,6 @@ def calculadora(request):
         resultado = num1 - num2
 
     else:
-        resultado = "operacion invalidaaaaaaa"
+        resultado = "operacion invalidaaaaaa"
 
     return render(request, 'base.html', {"resultado": resultado})
