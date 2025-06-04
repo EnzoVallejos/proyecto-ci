@@ -1,0 +1,27 @@
+name: CI
+on: 
+  push: 
+  pull_request:
+  
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    env: 
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    
+    steps:
+    - uses: actions/checkout@v4
+    - name: instalando dependencias
+      run: pip install -r requirements.txt
+    - name: ejecutando pruebas
+      run: python manage.py test
+    - name: deploy
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      run: curl -X POST ${{ secrets.RENDER_DEPLOY_KEY }}
+    - name: notificar a slack
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      uses: act10ns/slack@v2
+      with:
+        channel: '#todo-feedback-ci'
+        status: ${{ job.status }}
+        steps: ${{ toJson(steps) }}
