@@ -4,6 +4,7 @@ on:
 
 jobs:
   push:
+    if: github.event.pull_request == null
     runs-on: ubuntu-latest
     env: 
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -15,10 +16,10 @@ jobs:
     - name: ejecutando pruebas
       run: python manage.py test
     - name: deploy
-      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      if: github.ref == 'refs/heads/main'
       run: curl -X POST ${{ secrets.RENDER_DEPLOY_KEY }}
     - name: notificar a slack
-      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      if: github.ref == 'refs/heads/main'
       uses: act10ns/slack@v2
       with:
         channel: '#todo-feedback-ci'
