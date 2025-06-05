@@ -14,7 +14,4 @@ def calculadora(request):
     elif operacion == 'resta':
         resultado = num1 - num2
 
-    else:
-        resultado = "operacion invalida"
-
     return render(request, 'base.html', {"resultado": resultado})
